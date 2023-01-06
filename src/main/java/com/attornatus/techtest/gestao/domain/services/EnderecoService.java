@@ -8,6 +8,7 @@ import com.attornatus.techtest.gestao.repositories.EnderecoRepository;
 import com.attornatus.techtest.gestao.repositories.PessoaRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,12 +30,12 @@ public class EnderecoService {
             return endereco.get();
     }
     public List<EnderecoDTO> buscarTodosEnderecos(){
-        List<EnderecoDTO> listAddress = findAllAddress();
+        List<EnderecoDTO> listAddress = buscarEnderecos();
         if(listAddress.isEmpty()){
             throw new ObjetoNaoEncontradoException("Error: Nenhum endereço encontrado.");
         } else return listAddress;
     }
-    private List<EnderecoDTO> findAllAddress() {
+    private List<EnderecoDTO> buscarEnderecos() {
         return enderecoRepository.findAll().stream().map(obj -> new EnderecoDTO(obj)).collect(Collectors.toList());
     }
     private void buscarEnderecoPrincipal(Pessoa pessoa, EnderecoDTO enderecoDTO) {
@@ -45,4 +46,22 @@ public class EnderecoService {
             return;
         }
     }
+
+    public Endereco inserirEnderecoParaPessoa(EnderecoDTO endereco) throws ParseException {
+        Endereco end = passagemDTO(endereco);
+        enderecoRepository.save(end);
+
+        return end;
+    }
+
+    private Endereco passagemDTO(EnderecoDTO novoEndereco) throws ParseException {
+        Endereco endereco = new Endereco(null, novoEndereco.getLogradouro(), novoEndereco.getCep(), novoEndereco.getNumero(), novoEndereco.getCidade(), novoEndereco.getEnderecoPrincipal(), null);
+        Pessoa pessoa = new Pessoa(novoEndereco.getPessoaId(), null, null, null);
+        endereco.setPessoa(pessoa);
+        buscarEnderecoPrincipal(pessoa, novoEndereco);
+
+        return endereco;
+    }
+
+
 }

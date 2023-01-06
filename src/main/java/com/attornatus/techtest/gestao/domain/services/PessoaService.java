@@ -51,7 +51,7 @@ public class PessoaService {
         return pessoa;
     }
 
-    public Pessoa passagemDTO(NovaPessoaDTO pessoa){
+    private Pessoa passagemDTO(NovaPessoaDTO pessoa){
         Pessoa pessoaUp = new Pessoa();
         Endereco endereco = new Endereco(null, pessoa.getLogradouro(), pessoa.getCep(), pessoa.getNumero(), pessoa.getCidade(), pessoa.getEnderecoPrincipal(), pessoaUp);
         pessoaUp.setId(null);
