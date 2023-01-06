@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class NovaPessoaDTO {
     @NotEmpty(message = "Este campo não pode ser vazio")
     @Length(min = 3, max = 150)
-    private String name;
+    private String nome;
     @NotNull
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -37,8 +37,8 @@ public class NovaPessoaDTO {
     @NotEmpty(message = "Este campo não pode ser vazio")
     private Boolean enderecoPrincipal;
 
-    public NovaPessoaDTO(String name, LocalDate dataNascimento, String logradouro, String cep, Integer numero, String cidade, Boolean enderecoPrincipal) {
-        this.name = name;
+    public NovaPessoaDTO(String nome, LocalDate dataNascimento, String logradouro, String cep, Integer numero, String cidade, Boolean enderecoPrincipal) {
+        this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.logradouro = logradouro;
         this.cep = cep;

@@ -22,12 +22,14 @@ public class PessoaAtualizarDTO {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dataNascimento;
+    private Long enderecoId;
     private Boolean enderecoPrincipal;
 
-    public PessoaAtualizarDTO(Long id, String name, LocalDate dataNascimento, Boolean enderecoPrincipal) {
+    public PessoaAtualizarDTO(Long id, String name, LocalDate dataNascimento, Boolean enderecoPrincipal, Long enderecoId) {
         this.id = id;
         this.name = name;
         this.dataNascimento = dataNascimento;
+        this.enderecoId = enderecoId;
         this.enderecoPrincipal = enderecoPrincipal;
     }
 

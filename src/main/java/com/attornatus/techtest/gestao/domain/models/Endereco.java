@@ -29,4 +29,14 @@ public class Endereco {
     @JoinColumn(name = "pessoa_id", nullable = false)
     @JsonIgnore
     private Pessoa pessoa;
+
+    public Endereco(Long id, String logradouro, String cep, Integer numero, String cidade, Boolean enderecoPrincipal, Pessoa pessoa) {
+        this.id = id;
+        this.logradouro = logradouro;
+        this.cep = cep;
+        this.numero = numero;
+        this.cidade = cidade;
+        this.enderecoPrincipal = enderecoPrincipal;
+        this.pessoa = pessoa;
+    }
 }
