@@ -9,6 +9,7 @@ import com.attornatus.techtest.gestao.domain.services.excepctions.ObjetoNaoEncon
 import com.attornatus.techtest.gestao.repositories.EnderecoRepository;
 import com.attornatus.techtest.gestao.repositories.PessoaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class PessoaService {
         this.enderecoRepository = enderecoRepository;
     }
 
+    @Transactional(readOnly = true)
     public Pessoa buscarPorID(Long id) {
         Optional<Pessoa> pessoa = Optional.of(pessoaRepository.getReferenceById(id));
         if (!pessoa.isPresent())
@@ -32,6 +34,7 @@ public class PessoaService {
             return pessoa.get();
     }
 
+    @Transactional(readOnly = true)
     public List<TodasPessoasDTO> buscarTodasPessoas() {
         List<TodasPessoasDTO> listaPess = pessoaRepository
                 .findAll()
@@ -43,6 +46,7 @@ public class PessoaService {
             return listaPess;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Pessoa criar(NovaPessoaDTO novaPessoa) {
         Pessoa pessoa = passagemDTO(novaPessoa);
         pessoaRepository.save(pessoa);
@@ -61,19 +65,28 @@ public class PessoaService {
 
         return pessoaUp;
     }
+    @Transactional(rollbackFor = Exception.class)
     public Pessoa atualizarPessoa(PessoaAtualizarDTO atualizarPessoa){
         Pessoa pessoa = buscarPorID(atualizarPessoa.getId());
         atualizar(pessoa, atualizarPessoa);
         pessoaRepository.save(pessoa);
+
         return pessoa;
     }
 
-    private Pessoa atualizar(Pessoa antiga, PessoaAtualizarDTO nova){
-        antiga.setNome(nova.getName());
-        buscarEnderecoPrincipal(antiga, nova);
-        antiga.getEnderecos().get((int) (nova.getEnderecoId() -1)).setEnderecoPrincipal(nova.getEnderecoPrincipal());
+    private void atualizar(Pessoa p1, PessoaAtualizarDTO p2){
+        p1.setNome(p2.getNome());
+        p1.setDataNascimento(p2.getDataNascimento());
+        buscarEnderecoPrincipal(p1, p2);
+        if (p2.getEnderecoId() > p1.getEnderecos().size() || p2.getEnderecoId() < p1.getEnderecos().size())
+            throw new ObjetoNaoEncontradoException("Endereço Id inexistente");
+        p1.getEnderecos().get((int) (p2.getEnderecoId() -1)).setEnderecoPrincipal(p2.getEnderecoPrincipal());
+    }
 
-        return antiga;
+    public PessoaAtualizarDTO mudarPessoa(Long id, PessoaAtualizarDTO pessoa) {
+        pessoa.setId(id);
+        var novaPessoa = atualizarPessoa(pessoa);
+        return new PessoaAtualizarDTO(novaPessoa);
     }
 
     private void buscarEnderecoPrincipal(Pessoa pessoaEmBase, PessoaAtualizarDTO pessoa) {

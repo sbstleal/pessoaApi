@@ -40,15 +40,13 @@ public class PessoaController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<PessoaAtualizarDTO> atualizarPessoa(@PathVariable Long id, @Valid @RequestBody PessoaAtualizarDTO pessoa){
-        pessoa.setId(id);
-        var novaPessoa = pessoaService.atualizarPessoa(pessoa);
-        var novaPessoaAtualizada = new PessoaAtualizarDTO(novaPessoa);
+        PessoaAtualizarDTO novPessoa = pessoaService.mudarPessoa(id, pessoa);
 
-        return ResponseEntity.accepted().body(novaPessoaAtualizada);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping
-    public ResponseEntity<Void> insertPerson(@Valid @RequestBody NovaPessoaDTO pessoa){
+    public ResponseEntity<Void> criarPessoa(@Valid @RequestBody NovaPessoaDTO pessoa){
         var id = pessoaService.criar(pessoa).getId();
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -58,5 +56,4 @@ public class PessoaController {
 
         return ResponseEntity.created(uri).build();
     }
-
 }

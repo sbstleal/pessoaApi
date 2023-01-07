@@ -23,28 +23,49 @@ public class EnderecoService {
     }
 
     public Endereco buscarPorID(Long id) {
-        Optional<Endereco> endereco = Optional.of(enderecoRepository.getReferenceById(id));
-        if (!endereco.isPresent())
-            throw new ObjetoNaoEncontradoException("Erro: Pessoa não encontrada.");
+        return enderecoRepository.findById(id).orElseThrow( () -> {
+            return new ObjetoNaoEncontradoException("Erro: Pessoa não encontrada.");
+        });
+    }
+
+    public List<Endereco>  buscarTodosPorID(Long id) {
+        Pessoa pessoa = pessoaRepository.getById(id);
+        List<Endereco> enderecos = pessoa.getEnderecos();
+        if(enderecos.isEmpty())
+            throw new ObjetoNaoEncontradoException("Error: Nenhum endereço encontrado.");
         else
-            return endereco.get();
+            return enderecos;
     }
     public List<EnderecoDTO> buscarTodosEnderecos(){
-        List<EnderecoDTO> listAddress = buscarEnderecos();
-        if(listAddress.isEmpty()){
+        List<EnderecoDTO> listaEnderecos = buscarEnderecos();
+        if(listaEnderecos.isEmpty()){
             throw new ObjetoNaoEncontradoException("Error: Nenhum endereço encontrado.");
-        } else return listAddress;
+        } else return listaEnderecos;
     }
     private List<EnderecoDTO> buscarEnderecos() {
         return enderecoRepository.findAll().stream().map(obj -> new EnderecoDTO(obj)).collect(Collectors.toList());
     }
     private void buscarEnderecoPrincipal(Pessoa pessoa, EnderecoDTO enderecoDTO) {
-        for (Endereco x : pessoa.getEnderecos()) {
-            if (x.getEnderecoPrincipal() == true && enderecoDTO.getEnderecoPrincipal() == true) {
-                throw new ObjetoNaoEncontradoException("Esta pessoa já tem um endereço principal cadastrado, por favor, altere o endereço principal.");
+        if(enderecoDTO.getEnderecoPrincipal() == false) return;
+        pessoa.getEnderecos().forEach((endereco -> {
+            if (endereco.getEnderecoPrincipal() == true) {
+                throw new ObjetoNaoEncontradoException("Esta pessoa já tem um endereço principal cadastrado, " +
+                        "por favor, altere o endereço principal.");
             }
-            return;
-        }
+        }));
+    }
+
+    public Endereco informarEnderecoPrincipal(Long id) {
+        var ref = new Object() {
+            Long id;
+        };
+        Pessoa pessoa = pessoaRepository.getById(id);
+        pessoa.getEnderecos().forEach((endereco -> {
+            if (endereco.getEnderecoPrincipal() == true) {
+                ref.id = endereco.getId();
+            }
+        }));
+        return this.buscarPorID(ref.id);
     }
 
     public Endereco inserirEnderecoParaPessoa(EnderecoDTO endereco) throws ParseException {
@@ -56,7 +77,7 @@ public class EnderecoService {
 
     private Endereco passagemDTO(EnderecoDTO novoEndereco) throws ParseException {
         Endereco endereco = new Endereco(null, novoEndereco.getLogradouro(), novoEndereco.getCep(), novoEndereco.getNumero(), novoEndereco.getCidade(), novoEndereco.getEnderecoPrincipal(), null);
-        Pessoa pessoa = new Pessoa(novoEndereco.getPessoaId(), null, null, null);
+        Pessoa pessoa = new Pessoa(novoEndereco.getPessoaId(), null, null , null);
         endereco.setPessoa(pessoa);
         buscarEnderecoPrincipal(pessoa, novoEndereco);
 

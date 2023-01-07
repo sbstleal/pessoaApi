@@ -38,4 +38,14 @@ public class Endereco {
         this.enderecoPrincipal = enderecoPrincipal;
         this.pessoa = pessoa;
     }
+
+    public Endereco(Endereco endereco) {
+        this.id = endereco.getId();
+        this.logradouro = endereco.getLogradouro();
+        this.cep = endereco.getCep();
+        this.numero = endereco.getNumero();
+        this.cidade = endereco.getCidade();
+        this.enderecoPrincipal = endereco.getEnderecoPrincipal();
+        this.pessoa = endereco.getPessoa();
+    }
 }

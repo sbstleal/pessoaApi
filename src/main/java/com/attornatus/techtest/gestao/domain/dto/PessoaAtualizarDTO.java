@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class PessoaAtualizarDTO {
     @JsonIgnore
     private Long id;
-    private String name;
+    private String nome;
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd-MM-yyyy")
@@ -25,9 +25,9 @@ public class PessoaAtualizarDTO {
     private Long enderecoId;
     private Boolean enderecoPrincipal;
 
-    public PessoaAtualizarDTO(Long id, String name, LocalDate dataNascimento, Boolean enderecoPrincipal, Long enderecoId) {
+    public PessoaAtualizarDTO(Long id, String nome, LocalDate dataNascimento, Boolean enderecoPrincipal, Long enderecoId) {
         this.id = id;
-        this.name = name;
+        this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.enderecoId = enderecoId;
         this.enderecoPrincipal = enderecoPrincipal;
@@ -35,7 +35,7 @@ public class PessoaAtualizarDTO {
 
     public PessoaAtualizarDTO(Pessoa pessoa) {
         this.id = pessoa.getId();
-        this.name = pessoa.getNome();
+        this.nome = pessoa.getNome();
         this.dataNascimento = pessoa.getDataNascimento();
     }
 }

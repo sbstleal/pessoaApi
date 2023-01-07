@@ -14,27 +14,14 @@ import java.time.LocalDate;
 
 @Data
 public class NovaPessoaDTO {
-    @NotEmpty(message = "Este campo não pode ser vazio")
-    @Length(min = 3, max = 150)
     private String nome;
-    @NotNull
-    @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dataNascimento;
-    @NotEmpty(message = "Este campo não pode ser vazio")
-    @Length(min = 3, max = 150)
     private String logradouro;
-    @NotEmpty(message = "Este campo não pode ser vazio")
-    @Length(min = 8, max = 8)
     private String cep;
-    @NotEmpty(message = "Este campo não pode ser vazio")
-    @Length(min = 1, max = 10)
     private Integer numero;
-    @NotEmpty(message = "Este campo não pode ser vazio")
-    @Length(min = 1, max = 10)
     private String cidade;
-    @NotEmpty(message = "Este campo não pode ser vazio")
     private Boolean enderecoPrincipal;
 
     public NovaPessoaDTO(String nome, LocalDate dataNascimento, String logradouro, String cep, Integer numero, String cidade, Boolean enderecoPrincipal) {
