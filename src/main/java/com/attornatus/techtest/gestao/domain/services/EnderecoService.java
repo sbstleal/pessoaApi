@@ -45,15 +45,6 @@ public class EnderecoService {
     private List<EnderecoDTO> buscarEnderecos() {
         return enderecoRepository.findAll().stream().map(obj -> new EnderecoDTO(obj)).collect(Collectors.toList());
     }
-    private void buscarEnderecoPrincipal(Pessoa pessoa, EnderecoDTO enderecoDTO) {
-        if(enderecoDTO.getEnderecoPrincipal() == false) return;
-        pessoa.getEnderecos().forEach((endereco -> {
-            if (endereco.getEnderecoPrincipal() == true) {
-                throw new ObjetoNaoEncontradoException("Esta pessoa já tem um endereço principal cadastrado, " +
-                        "por favor, altere o endereço principal.");
-            }
-        }));
-    }
 
     public Endereco informarEnderecoPrincipal(Long id) {
         var ref = new Object() {
@@ -76,13 +67,20 @@ public class EnderecoService {
     }
 
     private Endereco passagemDTO(EnderecoDTO novoEndereco) throws ParseException {
-        Endereco endereco = new Endereco(null, novoEndereco.getLogradouro(), novoEndereco.getCep(), novoEndereco.getNumero(), novoEndereco.getCidade(), novoEndereco.getEnderecoPrincipal(), null);
-        Pessoa pessoa = new Pessoa(novoEndereco.getPessoaId(), null, null , null);
-        endereco.setPessoa(pessoa);
-        buscarEnderecoPrincipal(pessoa, novoEndereco);
+        Endereco endereco = new Endereco(null, novoEndereco.getLogradouro(), novoEndereco.getCep(), novoEndereco.getNumero(), novoEndereco.getCidade(), novoEndereco.getEnderecoPrincipal(), pessoaRepository.getById(novoEndereco.getPessoaId()));
+        buscarEnderecoPrincipal(pessoaRepository.getById(novoEndereco.getPessoaId()), novoEndereco);
 
         return endereco;
     }
 
+    private void buscarEnderecoPrincipal(Pessoa pessoa, EnderecoDTO enderecoDTO) {
+        if(enderecoDTO.getEnderecoPrincipal() == false) return;
+        pessoa.getEnderecos().forEach((endereco -> {
+            if (endereco.getEnderecoPrincipal() == true) {
+                throw new ObjetoNaoEncontradoException("Esta pessoa já tem um endereço principal cadastrado, " +
+                        "por favor, altere o endereço principal.");
+            }
+        }));
+    }
 
 }
