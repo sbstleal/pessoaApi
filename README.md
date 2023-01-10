@@ -15,7 +15,9 @@ A entrega deverá ser feita da seguinte forma:
 Qualidade de código
 
 1.	Durante a implementação de uma nova funcionalidade de software solicitada, quais critérios você avalia e implementa para garantia de qualidade de software?
-2.	Em qual etapa da implementação você considera a qualidade de software?
+Estabelecer padrões e critérios de avaliação, além de realizar testes durante todo o ciclo de vida do software.
+3.	Em qual etapa da implementação você considera a qualidade de software?
+Durante todo o ciclo de vida do software.
 
 Desafio Java
 
@@ -49,3 +51,5 @@ Será levado em avaliação
 •	Estrutura, arquitetura e organização do projeto  
 •	Boas práticas de programação  
 •	Alcance dos objetivos propostos.
+
+Status: Finalizado!
